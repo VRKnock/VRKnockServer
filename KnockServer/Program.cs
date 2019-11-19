@@ -58,9 +58,7 @@ namespace KnockServer
             Console.WriteLine("Adding Firewall Rule...");
             AddFirewallRule();
 
-            Console.WriteLine("Initializing VR...");
-            NotificationManager.GetInstance().Init();
-
+            
             Console.WriteLine("Starting Web Service...");
             /*
             var restServiceInstance = new RestService();
@@ -72,11 +70,15 @@ namespace KnockServer
             stp.HttpHelpPageEnabled = false;
             hostWeb.Open();
 
-            //var localIp = GetLocalIPAddress();
+            //var localIp = GetLocalIPAddress()
 
             Console.WriteLine("Web Service Running!");
             Console.WriteLine(ep.Address);
            // Console.WriteLine(localIp);
+           
+           Console.WriteLine("Initializing VR...");
+           NotificationManager.GetInstance().Init();
+           
         }
 
 
