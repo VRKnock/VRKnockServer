@@ -7,6 +7,8 @@ namespace KnockServer
     {
         private static NotificationManager instance;
 
+        private TestOverlay overlayInstance;
+
         public static NotificationManager GetInstance()
         {
             if(instance==null)
@@ -21,18 +23,16 @@ namespace KnockServer
         [STAThread]
         public void Init()
         {
-            HUDCenterController.GetInstance().Init();
-            
-            
+            var controller = HUDCenterController.GetInstance();
+            controller.Init();
+
+            overlayInstance = new TestOverlay("Knock Knock!", 100f);
+            controller.RegisterNewItem(overlayInstance);
         }
         
         public void ShowNotification(string message)
         {
-            var controller = HUDCenterController.GetInstance();
-            controller.ClearNotifications();
-            TestOverlay testOverlay = new TestOverlay("Knock Knock", 100f);
-            controller.RegisterNewItem(testOverlay);
-            testOverlay.showMessage(message);
+           overlayInstance.showMessage(message);
         }
         
         
