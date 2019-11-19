@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
@@ -19,17 +20,50 @@ namespace KnockServer
         [STAThread]
         static void Main(string[] args)
         {
+            if (args.Length > 0)
+            {
+                if ("console" == args[0])
+                    ShowConsoleWindow();
+            }
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             Application.Run(new CustomApplicationContext());
 
+        }
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool AllocConsole();
 
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
 
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
 
+        public static void ShowConsoleWindow()
+        {
+            var handle = GetConsoleWindow();
+
+            if (handle == IntPtr.Zero)
+            {
+                AllocConsole();
+            }
+            else
+            {
+                ShowWindow(handle, SW_SHOW);
+            }
+        }
+
+        public static void HideConsoleWindow()
+        {
+            var handle = GetConsoleWindow();
+            ShowWindow(handle, SW_HIDE);
         }
 
 
