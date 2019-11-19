@@ -27,23 +27,11 @@ namespace KnockServer
 
 
 
-            
 
 
-
-          
-
-            Console.WriteLine("");
-            Console.WriteLine("Press any key to stop");
-
-
-
-            Console.ReadLine();
-            Console.WriteLine("Stopping...");
-           
         }
 
-        
+
     }
 
     public class CustomApplicationContext : ApplicationContext
@@ -56,7 +44,8 @@ namespace KnockServer
         {
             trayIcon = new NotifyIcon()
             {
-                //Icon = ,
+                Text = "VRKnockServer",
+                Icon = Properties.Resources.AppIcon,
                 ContextMenu = new ContextMenu(new MenuItem[] {
                 new MenuItem("Exit", Exit)
             }),
@@ -75,7 +64,7 @@ namespace KnockServer
             var restServiceInstance = new RestService();
             WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
             */
-             hostWeb = new WebServiceHost(typeof(RestService));
+            hostWeb = new WebServiceHost(typeof(RestService));
             ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(KnockServer.IService), new WebHttpBinding(), "");
             ServiceDebugBehavior stp = hostWeb.Description.Behaviors.Find<ServiceDebugBehavior>();
             stp.HttpHelpPageEnabled = false;
@@ -155,7 +144,7 @@ namespace KnockServer
 
         void Exit(object sender, EventArgs e)
         {
-            
+
 
             Application.Exit();
         }
