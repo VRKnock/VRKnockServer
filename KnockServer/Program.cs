@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
+using System.Windows.Forms;
 using NetFwTypeLib;
 using SteamVR_HUDCenter;
 using SteamVR_HUDCenter.Elements;
@@ -17,35 +18,76 @@ namespace KnockServer
         [STAThread]
         static void Main(string[] args)
         {
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            Application.Run(new CustomApplicationContext());
+
+
+
+
+            
+
+
+
+          
+
+            Console.WriteLine("");
+            Console.WriteLine("Press any key to stop");
+
+
+
+            Console.ReadLine();
+            Console.WriteLine("Stopping...");
+           
+        }
+
+        
+    }
+
+    public class CustomApplicationContext : ApplicationContext
+    {
+        private NotifyIcon trayIcon;
+
+        WebServiceHost hostWeb;
+
+        public CustomApplicationContext()
+        {
+            trayIcon = new NotifyIcon()
+            {
+                //Icon = ,
+                ContextMenu = new ContextMenu(new MenuItem[] {
+                new MenuItem("Exit", Exit)
+            }),
+                Visible = true
+            };
+
+
+            Console.WriteLine("Adding Firewall Rule...");
             AddFirewallRule();
-            
+
+            Console.WriteLine("Initializing VR...");
             NotificationManager.GetInstance().Init();
-            
+
+            Console.WriteLine("Starting Web Service...");
             /*
             var restServiceInstance = new RestService();
             WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
             */
-            WebServiceHost hostWeb = new WebServiceHost(typeof(RestService));
+             hostWeb = new WebServiceHost(typeof(RestService));
             ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(KnockServer.IService), new WebHttpBinding(), "");
             ServiceDebugBehavior stp = hostWeb.Description.Behaviors.Find<ServiceDebugBehavior>();
             stp.HttpHelpPageEnabled = false;
             hostWeb.Open();
 
             var localIp = GetLocalIPAddress();
-            
+
             Console.WriteLine("Web Service Running!");
             Console.WriteLine(ep.Address);
             Console.WriteLine(localIp);
-
-            Console.WriteLine("");
-            Console.WriteLine("Press any key to stop");
-            
-
-            Console.ReadLine();
-            Console.WriteLine("Stopping...");
-            hostWeb.Close();
-            HUDCenterController.GetInstance().Stop();
         }
+
 
         static bool AddFirewallRule()
         {
@@ -89,7 +131,7 @@ namespace KnockServer
                 return false;
             }
         }
-        
+
         public static string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -102,5 +144,21 @@ namespace KnockServer
             }
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
+
+        private void OnApplicationExit(object sender, EventArgs e)
+        {
+            trayIcon.Visible = false;
+
+            hostWeb.Close();
+            HUDCenterController.GetInstance().Stop();
+        }
+
+        void Exit(object sender, EventArgs e)
+        {
+            
+
+            Application.Exit();
+        }
     }
+
 }

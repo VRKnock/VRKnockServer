@@ -38,9 +38,21 @@ namespace KnockServer
             Console.WriteLine(code);
             Console.WriteLine(message);
 
-            NotificationManager.GetInstance().ShowNotification(message);
-
             Status status = new Status();
+
+            var notificationManager = NotificationManager.GetInstance();
+            if (!notificationManager.CheckCode(code))
+            {
+                Console.WriteLine("Wrong Code!");
+                status.status = 1;
+                status.msg = "Wrong code";
+
+                return status;
+            }
+            Console.WriteLine("Correct Code!");
+
+            notificationManager.ShowNotification(message);
+
             status.status = 0;
             status.msg = "Notification sent!";
             
