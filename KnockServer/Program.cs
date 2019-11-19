@@ -47,10 +47,12 @@ namespace KnockServer
                 Text = "VRKnockServer",
                 Icon = Properties.Resources.AppIcon,
                 ContextMenu = new ContextMenu(new MenuItem[] {
-                new MenuItem("Exit", Exit)
-            }),
+                    new MenuItem("Info", Info), 
+                    new MenuItem("Exit", Exit)
+                }),
                 Visible = true
             };
+            trayIcon.Click += Info;
 
 
             Console.WriteLine("Adding Firewall Rule...");
@@ -70,11 +72,11 @@ namespace KnockServer
             stp.HttpHelpPageEnabled = false;
             hostWeb.Open();
 
-            var localIp = GetLocalIPAddress();
+            //var localIp = GetLocalIPAddress();
 
             Console.WriteLine("Web Service Running!");
             Console.WriteLine(ep.Address);
-            Console.WriteLine(localIp);
+           // Console.WriteLine(localIp);
         }
 
 
@@ -121,17 +123,17 @@ namespace KnockServer
             }
         }
 
-        public static string GetLocalIPAddress()
+  
+
+        void Info(object sender, EventArgs e)
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("No network adapters with an IPv4 address in the system!");
+            ShowInfoForm();
+        }
+        
+        public static void ShowInfoForm()
+        {
+            InfoForm form = new InfoForm();
+            form.Show();
         }
 
         private void OnApplicationExit(object sender, EventArgs e)

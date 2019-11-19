@@ -1,6 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using QRCoder;
 using SteamVR_HUDCenter;
 
 namespace KnockServer
@@ -11,7 +14,8 @@ namespace KnockServer
 
         private TestOverlay overlayInstance;
 
-        private string connectionCode;
+        public string connectionCode;
+        private QRCode qrCode;
 
         public static NotificationManager GetInstance()
         {
@@ -49,6 +53,16 @@ namespace KnockServer
             return this.connectionCode == code;
         }
 
+        public QRCode GetQRCode()
+        {
+            if (qrCode == null)
+            {
+                qrCode = new QRCode(new QRCodeGenerator().CreateQrCode("http://"+GetLocalIPAddress()+"/"+connectionCode,QRCodeGenerator.ECCLevel.Q));
+            }
+
+            return qrCode;
+        }
+
         public void ShowNotification(string message)
         {
             overlayInstance.showMessage(message);
@@ -63,6 +77,18 @@ namespace KnockServer
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
+        }
 
 
     }
