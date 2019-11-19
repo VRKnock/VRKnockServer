@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.ServiceModel;
@@ -58,27 +59,49 @@ namespace KnockServer
             Console.WriteLine("Adding Firewall Rule...");
             AddFirewallRule();
 
-            
-            Console.WriteLine("Starting Web Service...");
-            /*
-            var restServiceInstance = new RestService();
-            WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
-            */
-            hostWeb = new WebServiceHost(typeof(RestService));
-            ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(KnockServer.IService), new WebHttpBinding(), "");
-            ServiceDebugBehavior stp = hostWeb.Description.Behaviors.Find<ServiceDebugBehavior>();
-            stp.HttpHelpPageEnabled = false;
-            hostWeb.Open();
 
-            //var localIp = GetLocalIPAddress()
+            try
+            {
+                Console.WriteLine("Starting Web Service...");
+                /*
+                var restServiceInstance = new RestService();
+                WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
+                */
+                hostWeb = new WebServiceHost(typeof(RestService));
+                ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(KnockServer.IService), new WebHttpBinding(), "");
+                ServiceDebugBehavior stp = hostWeb.Description.Behaviors.Find<ServiceDebugBehavior>();
+                stp.HttpHelpPageEnabled = false;
+                hostWeb.Open();
 
-            Console.WriteLine("Web Service Running!");
-            Console.WriteLine(ep.Address);
-           // Console.WriteLine(localIp);
-           
-           Console.WriteLine("Initializing VR...");
-           NotificationManager.GetInstance().Init();
-           
+                //var localIp = GetLocalIPAddress()
+
+                Console.WriteLine("Web Service Running!");
+                Console.WriteLine(ep.Address);
+                // Console.WriteLine(localIp);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to start Server!", ToolTipIcon.Error);
+                return;
+            }
+
+            try
+            {
+                Console.WriteLine("Initializing VR...");
+                NotificationManager.GetInstance().Init();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to init VR!", ToolTipIcon.Error);
+                return;
+            }
+
+
+            trayIcon.ShowBalloonTip(2000, "VRKnock", "Server Running!",ToolTipIcon.Info);
+
         }
 
 
