@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Linq;
 using SteamVR_HUDCenter;
 
 namespace KnockServer
@@ -23,6 +25,11 @@ namespace KnockServer
         [STAThread]
         public void Init()
         {
+            var varsFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "VRKnockSettings.txt");
+            
+            
+            
             var controller = HUDCenterController.GetInstance();
             controller.Init();
 
@@ -35,6 +42,14 @@ namespace KnockServer
            overlayInstance.showMessage(message);
         }
         
+        
+        private static Random random = new Random();
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
         
 
 
