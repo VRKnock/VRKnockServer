@@ -8,7 +8,7 @@ namespace KnockServer
     {
 
         [OperationContract]
-        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped,
+        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "status")]
         [return:MessageParameter(Name="Status")]
         Status GetStatus(string code);
