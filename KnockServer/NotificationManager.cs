@@ -43,7 +43,7 @@ namespace KnockServer
 
 
             var controller = HUDCenterController.GetInstance();
-            controller.Init(EVRApplicationType.VRApplication_Background);
+            controller.Init(EVRApplicationType.VRApplication_Overlay);
 
             overlayInstance = new TestOverlay("Knock Knock!", 100f);
             controller.RegisterNewItem(overlayInstance);
