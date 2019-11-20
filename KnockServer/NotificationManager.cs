@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using QRCoder;
 using SteamVR_HUDCenter;
+using Valve.VR;
 
 namespace KnockServer
 {
@@ -42,7 +43,7 @@ namespace KnockServer
 
 
             var controller = HUDCenterController.GetInstance();
-            controller.Init();
+            controller.Init(EVRApplicationType.VRApplication_Background);
 
             overlayInstance = new TestOverlay("Knock Knock!", 100f);
             controller.RegisterNewItem(overlayInstance);

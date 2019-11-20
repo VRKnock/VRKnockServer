@@ -129,7 +129,7 @@ namespace KnockServer
             catch(Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to init VR!", ToolTipIcon.Error);
+                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to init VR! Please make sure SteamVR is running!", ToolTipIcon.Error);
                 return;
             }
 
