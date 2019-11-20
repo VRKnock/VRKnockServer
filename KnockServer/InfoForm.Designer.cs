@@ -37,6 +37,7 @@ namespace KnockServer
             this.qrPictureBox = new System.Windows.Forms.PictureBox();
             this.hostLabel = new System.Windows.Forms.Label();
             this.codeLabel = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize) (this.qrPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,11 +73,20 @@ namespace KnockServer
             this.codeLabel.TabIndex = 3;
             this.codeLabel.Text = "Code:";
             // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(10, 290);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(226, 20);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Right-Click the Tray Icon to Exit";
+            // 
             // InfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 519);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.codeLabel);
             this.Controls.Add(this.hostLabel);
             this.Controls.Add(this.qrPictureBox);
@@ -94,5 +104,6 @@ namespace KnockServer
         private System.Windows.Forms.PictureBox qrPictureBox;
         private System.Windows.Forms.Label codeLabel;
         private System.Windows.Forms.Label hostLabel;
+        private System.Windows.Forms.Label label2;
     }
 }
