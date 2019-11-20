@@ -8,7 +8,7 @@ namespace KnockServer
     {
         
         
-        public Status GetStatus()
+        public Status GetStatus(string code="")
         {
             Console.WriteLine("GetStatus");
             
@@ -16,6 +16,17 @@ namespace KnockServer
             bool running = controller._IsRunning;
             
             Status status = new Status();
+            
+            var notificationManager = NotificationManager.GetInstance();
+            if (!notificationManager.CheckCode(code))
+            {
+                Console.WriteLine("Wrong Code!");
+                status.status = 1;
+                status.msg = "Wrong code";
+
+                return status;
+            }
+
             if (running)
             {
                 status.status = 0;
