@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
@@ -30,7 +32,29 @@ namespace KnockServer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Application.Run(new CustomApplicationContext());
+            if (!IsRunAsAdmin())
+            {
+                ProcessStartInfo proc = new ProcessStartInfo();
+                proc.UseShellExecute = true;
+                proc.WorkingDirectory = Environment.CurrentDirectory;
+                proc.FileName = Assembly.GetEntryAssembly().CodeBase;
+
+                proc.Verb = "runas";
+
+                try
+                {
+                    Process.Start(proc);
+                    Application.Exit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("This program must be run as an administrator! \n\n" + ex.ToString());
+                }
+            }
+            else
+            {
+                Application.Run(new CustomApplicationContext());
+            }
 
         }
 
@@ -67,6 +91,21 @@ namespace KnockServer
         }
 
 
+
+        private static bool IsRunAsAdmin()
+        {
+            try
+            {
+                WindowsIdentity id = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(id);
+                return principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
     }
 
     public class CustomApplicationContext : ApplicationContext
@@ -82,7 +121,7 @@ namespace KnockServer
                 Text = "VRKnockServer",
                 Icon = Properties.Resources.AppIcon,
                 ContextMenu = new ContextMenu(new MenuItem[] {
-                    new MenuItem("Info", Info), 
+                    new MenuItem("Info", Info),
                     new MenuItem("Exit", Exit)
                 }),
                 Visible = true
@@ -126,7 +165,7 @@ namespace KnockServer
                 Console.WriteLine("Initializing VR...");
                 NotificationManager.GetInstance().Init();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to init VR! Please make sure SteamVR is running!", ToolTipIcon.Error);
@@ -134,7 +173,7 @@ namespace KnockServer
             }
 
 
-            trayIcon.ShowBalloonTip(2000, "VRKnock", "Server Running!",ToolTipIcon.Info);
+            trayIcon.ShowBalloonTip(2000, "VRKnock", "Server Running!", ToolTipIcon.Info);
 
         }
 
@@ -182,13 +221,13 @@ namespace KnockServer
             }
         }
 
-  
+
 
         void Info(object sender, EventArgs e)
         {
             ShowInfoForm();
         }
-        
+
         public static void ShowInfoForm()
         {
             InfoForm form = new InfoForm();
