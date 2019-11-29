@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -40,6 +41,7 @@ namespace KnockServer
                 proc.FileName = Assembly.GetEntryAssembly().CodeBase;
 
                 proc.Verb = "runas";
+                proc.Arguments = string.Join(" ", args);
 
                 try
                 {
