@@ -186,7 +186,7 @@ namespace KnockServer
         static void RegisterAutoLaunchApp()
         {
             
-            var error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock", true);
+            var error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock", Properties.Settings.Default.AutoStart);
             Console.WriteLine("ApplicationAutoLaunch Error:");
             Console.WriteLine(error);
             if (error == EVRApplicationError.UnknownApplication)
@@ -197,7 +197,7 @@ namespace KnockServer
                 Console.WriteLine(error);
             }
 
-            error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock", true);
+            error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock", Properties.Settings.Default.AutoStart);
             Console.WriteLine("ApplicationAutoLaunch Error:");
             Console.WriteLine(error);
         }
