@@ -99,6 +99,7 @@ namespace KnockServer
             uint ID = GetRandomID();
             
             /// https://github.com/ValveSoftware/openvr/issues/1133#issuecomment-460575906
+            // TODO: allow for custom images (e.g. emojis) specified in mobile app
             var image = new NotificationBitmap_t();
             var bitmap = new Bitmap("Resources/vrknock-x512.png");
             
