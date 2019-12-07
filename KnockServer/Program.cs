@@ -12,9 +12,6 @@ using System.ServiceModel.Description;
 using System.ServiceModel.Web;
 using System.Windows.Forms;
 using NetFwTypeLib;
-using SteamVR_HUDCenter;
-using SteamVR_HUDCenter.Elements;
-using SteamVR_HUDCenter.Elements.Forms;
 using Valve.VR;
 
 namespace KnockServer
@@ -264,7 +261,6 @@ namespace KnockServer
             trayIcon.Visible = false;
 
             hostWeb.Close();
-            HUDCenterController.GetInstance().Stop();
         }
 
         void Exit(object sender, EventArgs e)

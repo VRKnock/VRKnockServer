@@ -1,5 +1,4 @@
 using System;
-using SteamVR_HUDCenter;
 using Valve.VR;
 
 namespace KnockServer
@@ -12,8 +11,8 @@ namespace KnockServer
         {
             Console.WriteLine("GetStatus");
             
-            var controller = HUDCenterController.GetInstance();
-            bool running = controller._IsRunning;
+           // var controller = HUDCenterController.GetInstance();
+            bool running = true;
             
             Status status = new Status();
             

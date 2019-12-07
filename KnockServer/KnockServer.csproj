@@ -93,16 +93,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RestService.cs" />
-    <Compile Include="TestOverlay.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SteamVR_HUDCenter\SteamVR_HUDCenter.csproj">
-      <Project>{18d9af3e-821b-4c0f-9a8d-d2f10d490302}</Project>
-      <Name>SteamVR_HUDCenter</Name>
-    </ProjectReference>
+    <Compile Include="SteamVR\openvr_api.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="SteamVR\open_api_patch.diff" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="NetFwTypeLib">
@@ -117,6 +112,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="manifest.vrmanifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="openvr_api.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Properties\Settings.settings">
