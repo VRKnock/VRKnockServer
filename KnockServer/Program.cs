@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -173,12 +174,34 @@ namespace KnockServer
                 trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to init VR! Please make sure SteamVR is running!", ToolTipIcon.Error);
                 return;
             }
-
+        
+            RegisterAutoLaunchApp();
+                 
+            
+            
 
             trayIcon.ShowBalloonTip(2000, "VRKnock", "Server Running!", ToolTipIcon.Info);
 
         }
 
+        static void RegisterAutoLaunchApp()
+        {
+            
+            var error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock", true);
+            Console.WriteLine("ApplicationAutoLaunch Error:");
+            Console.WriteLine(error);
+            if (error == EVRApplicationError.UnknownApplication)
+            {
+                error = OpenVR.Applications.AddApplicationManifest(
+                    Path.Combine(System.Environment.CurrentDirectory, "manifest.vrmanifest"), false);
+                Console.WriteLine("AddApplicationManifest Error:");
+                Console.WriteLine(error);
+            }
+
+            error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock", true);
+            Console.WriteLine("ApplicationAutoLaunch Error:");
+            Console.WriteLine(error);
+        }
 
         static bool AddFirewallRule()
         {

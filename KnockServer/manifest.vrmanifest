@@ -1,0 +1,16 @@
+{
+	"source" : "builtin",
+	"applications": [{
+		"app_key": "org.inventivetalent.vrknock",
+		"launch_type": "binary",
+		"binary_path_windows": "KnockServer.exe",
+		"is_dashboard_overlay": true,
+
+		"strings": {
+			"en_us": {
+				"name": "VRKnock",
+				"description": "Server for VRKnock App"
+			}
+		}
+	}]
+}

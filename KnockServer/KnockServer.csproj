@@ -116,6 +116,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="manifest.vrmanifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
