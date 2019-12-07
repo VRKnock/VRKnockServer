@@ -53,6 +53,8 @@ namespace KnockServer
             }
             else
             {
+                Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                
                 Application.Run(new CustomApplicationContext());
             }
 
