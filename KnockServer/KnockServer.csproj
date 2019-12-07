@@ -121,6 +121,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </Content>
+    <Content Include="Resources\vrknock-x512.png" />
+    <Content Include="Resources\web_hi_res_512.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Resources\AppIcon.ico" />

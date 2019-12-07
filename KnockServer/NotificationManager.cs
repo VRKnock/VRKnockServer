@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -92,14 +93,33 @@ namespace KnockServer
         {
             OpenVR.Notifications.RemoveNotification(currentNotificationId);
 
-       
+
             
             //overlayInstance.showMessage(message);
             uint ID = GetRandomID();
-            var bitmap = new NotificationBitmap_t();
+            
+            /// https://github.com/ValveSoftware/openvr/issues/1133#issuecomment-460575906
+            var image = new NotificationBitmap_t();
+            var bitmap = new Bitmap("Resources/vrknock-x512.png");
+            
+            System.Drawing.Imaging.BitmapData TextureData =
+                bitmap.LockBits(
+                    new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                    System.Drawing.Imaging.ImageLockMode.ReadOnly,
+                    System.Drawing.Imaging.PixelFormat.Format32bppArgb
+                );
+
+            image.m_pImageData = TextureData.Scan0;
+            image.m_nWidth = TextureData.Width;
+            image.m_nHeight = TextureData.Height;
+            image.m_nBytesPerPixel = 4;
+
             OpenVR.Notifications.CreateNotification(notificationHandle, 0, EVRNotificationType.Transient, message,
-                EVRNotificationStyle.None, ref bitmap, ref ID);
+                EVRNotificationStyle.None, ref image, ref ID);
             currentNotificationId = ID;
+            
+            //Unlocks Image Data
+            bitmap.UnlockBits(TextureData);
 
             OpenVR.Overlay.ShowOverlay(notificationHandle);
         }
