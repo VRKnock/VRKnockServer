@@ -6,6 +6,9 @@
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
+AppPublisher=inventivetalent
+AppPublisherURL=https://inventivetalent.org
+AppSupportURL=https://github.com/InventivetalentDev/RemoteVRKnockServer/issues
 VersionInfoVersion={#AppVersion}
 WizardStyle=modern
 DefaultDirName={autopf}\{#AppName}
