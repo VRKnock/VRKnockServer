@@ -31,6 +31,7 @@ namespace KnockServer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            /*
             if (!IsRunAsAdmin())
             {
                 ProcessStartInfo proc = new ProcessStartInfo();
@@ -52,11 +53,11 @@ namespace KnockServer
                 }
             }
             else
-            {
+            {*/
                 Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Version.ToString());
                 
                 Application.Run(new CustomApplicationContext());
-            }
+            //}
 
         }
 
@@ -143,7 +144,7 @@ namespace KnockServer
                 WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
                 */
                 hostWeb = new WebServiceHost(typeof(RestService));
-                ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(KnockServer.IService), new WebHttpBinding(), "");
+                ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(IService), new WebHttpBinding(), "");
                 ServiceDebugBehavior stp = hostWeb.Description.Behaviors.Find<ServiceDebugBehavior>();
                 stp.HttpHelpPageEnabled = false;
                 hostWeb.Open();
