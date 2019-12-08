@@ -19,6 +19,7 @@ SolidCompression=yes
 SourceDir="bin\Release"
 OutputDir="Installer"
 OutputBaseFilename={#AppName}_{#AppVersion}_setup
+LicenseFile=LICENSE
 
 [Files]
 Source: "KnockServer.exe"; DestDir: "{app}"
@@ -27,6 +28,7 @@ Source: "manifest.vrmanifest"; DestDir: "{app}"
 Source: "openvr_api.dll"; DestDir: "{app}"
 Source: "QRCoder.dll"; DestDir: "{app}"
 Source: "Resources\*"; DestDir: "{app}"
+Source: "..\..\..\LICENSE"; DestDir: "{app}"
 
 [Code]
 function UserDomainAndName(Param: String): String;
