@@ -27,7 +27,7 @@ Source: "KnockServer.exe.config"; DestDir: "{app}"
 Source: "manifest.vrmanifest"; DestDir: "{app}"
 Source: "openvr_api.dll"; DestDir: "{app}"
 Source: "QRCoder.dll"; DestDir: "{app}"
-Source: "Resources\*"; DestDir: "{app}"
+Source: "Resources\*"; DestDir: "{app}\Resources\"
 Source: "..\..\..\LICENSE"; DestDir: "{app}"
 
 [Code]
