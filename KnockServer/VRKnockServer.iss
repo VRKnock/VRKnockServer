@@ -19,7 +19,7 @@ SolidCompression=yes
 SourceDir="bin\Release"
 OutputDir="Installer"
 OutputBaseFilename={#AppName}_{#AppVersion}_setup
-LicenseFile=LICENSE
+LicenseFile=..\..\..\LICENSE
 
 [Files]
 Source: "KnockServer.exe"; DestDir: "{app}"
