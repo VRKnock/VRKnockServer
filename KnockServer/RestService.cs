@@ -61,10 +61,23 @@ namespace KnockServer
             }
             Console.WriteLine("Correct Code!");
 
-            notificationManager.ShowNotification(message);
+            try
+            {
+                notificationManager.ShowNotification(message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                status.status = 2;
+                status.msg = "Unexpected Error";
+
+                return status;
+            }
 
             status.status = 0;
             status.msg = "Notification sent!";
+
+            Console.WriteLine("Notification sent!");
             
             return status;
         }
