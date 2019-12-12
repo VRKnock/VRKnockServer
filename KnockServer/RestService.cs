@@ -43,6 +43,13 @@ namespace KnockServer
                 status.msg = "VR Controller not running";
             }
 
+            if (!notificationManager.IsHmdPresent())
+            {
+                status.status = 1;
+                status.msg = "VR Headset is not connected";
+                return status;
+            }
+
             status.host = Environment.MachineName;
             status.game = notificationManager.GetCurrentGame();
 
