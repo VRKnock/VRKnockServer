@@ -13,15 +13,15 @@ namespace KnockServer
             _stopwatch.Start();
         }
 
-        public Status GetStatus(string code="")
+        public Status GetStatus(string code = "")
         {
             Console.WriteLine("GetStatus");
-            
-           // var controller = HUDCenterController.GetInstance();
+
+            // var controller = HUDCenterController.GetInstance();
             bool running = true;
-            
+
             Status status = new Status();
-            
+
             var notificationManager = NotificationManager.GetInstance();
             if (!notificationManager.CheckCode(code))
             {
@@ -44,12 +44,13 @@ namespace KnockServer
             }
 
             status.host = Environment.MachineName;
+            status.game = notificationManager.GetCurrentGame();
 
-            
+
             return status;
         }
 
-        public Status TriggerKnock(string code, string message="Knock Knock!")
+        public Status TriggerKnock(string code, string message = "Knock Knock!")
         {
             Console.WriteLine("TriggerKnock");
             Console.WriteLine(code);
@@ -66,9 +67,10 @@ namespace KnockServer
 
                 return status;
             }
+
             Console.WriteLine("Correct Code!");
 
-            if (_stopwatch.ElapsedMilliseconds<1000*10)
+            if (_stopwatch.ElapsedMilliseconds < 1000 * 10)
             {
                 Console.WriteLine("Too Soon!");
                 status.status = 1;
@@ -76,7 +78,7 @@ namespace KnockServer
 
                 return status;
             }
-            
+
 
             try
             {
@@ -97,13 +99,12 @@ namespace KnockServer
             Console.WriteLine("Notification sent!");
 
             status.host = Environment.MachineName;
-            
+            status.game = notificationManager.GetCurrentGame();
+
             _stopwatch.Restart();
-            
-            
+
+
             return status;
         }
-
-     
     }
 }

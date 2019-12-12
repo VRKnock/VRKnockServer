@@ -29,5 +29,6 @@ namespace KnockServer
         public string msg { get; set; }
         public string host { get; set; }
         public string device { get; set; }
+        public string game { get; set; }
     }
 }
