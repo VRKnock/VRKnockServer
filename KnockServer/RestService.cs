@@ -31,6 +31,8 @@ namespace KnockServer
 
                 return status;
             }
+            
+            status.host = Environment.MachineName;
 
             if (running)
             {
@@ -50,7 +52,6 @@ namespace KnockServer
                 return status;
             }
 
-            status.host = Environment.MachineName;
             status.game = notificationManager.GetCurrentGame();
 
 
@@ -74,9 +75,10 @@ namespace KnockServer
 
                 return status;
             }
-
+            
             Console.WriteLine("Correct Code!");
 
+            status.host = Environment.MachineName;
             /*
             if (_stopwatch.ElapsedMilliseconds < 1000 * 10)
             {
@@ -107,7 +109,6 @@ namespace KnockServer
 
             Console.WriteLine("Notification sent!");
 
-            status.host = Environment.MachineName;
             status.game = notificationManager.GetCurrentGame();
 
             _stopwatch.Restart();
