@@ -1,12 +1,18 @@
 using System;
+using System.Diagnostics;
 using Valve.VR;
 
 namespace KnockServer
 {
     public class RestService : IService
     {
-        
-        
+        private Stopwatch _stopwatch = new Stopwatch();
+
+        public RestService()
+        {
+            _stopwatch.Start();
+        }
+
         public Status GetStatus(string code="")
         {
             Console.WriteLine("GetStatus");
@@ -38,6 +44,7 @@ namespace KnockServer
             }
 
             status.host = Environment.MachineName;
+
             
             return status;
         }
@@ -61,6 +68,16 @@ namespace KnockServer
             }
             Console.WriteLine("Correct Code!");
 
+            if (_stopwatch.ElapsedMilliseconds<1000*10)
+            {
+                Console.WriteLine("Too Soon!");
+                status.status = 1;
+                status.msg = "Too soon";
+
+                return status;
+            }
+            
+
             try
             {
                 notificationManager.ShowNotification(message);
@@ -78,6 +95,11 @@ namespace KnockServer
             status.msg = "Notification sent!";
 
             Console.WriteLine("Notification sent!");
+
+            status.host = Environment.MachineName;
+            
+            _stopwatch.Restart();
+            
             
             return status;
         }
