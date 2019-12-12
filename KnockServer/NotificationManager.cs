@@ -75,6 +75,27 @@ namespace KnockServer
             OpenVR.Overlay.SetOverlayInputMethod(notificationHandle, VROverlayInputMethod.None);
         }
 
+        public string GetDevice()
+        {
+            //TODO
+            return "";
+        }
+
+        public bool IsHmdPresent()
+        {
+            return OpenVR.IsHmdPresent();
+        }
+        
+        public string GetCurrentGame()
+        {
+            var processId = OpenVR.Applications.GetCurrentSceneProcessId();
+            Console.WriteLine("Current Process ID: " + processId);
+            var process = Process.GetProcessById((int)processId);
+            Console.WriteLine(process.ProcessName);
+            Console.WriteLine(process.MainWindowTitle);
+            return process.ProcessName;
+        }
+
         public bool CheckCode(string code)
         {
             return this.connectionCode == code;

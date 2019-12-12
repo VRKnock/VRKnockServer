@@ -77,6 +77,7 @@ namespace KnockServer
 
             Console.WriteLine("Correct Code!");
 
+            /*
             if (_stopwatch.ElapsedMilliseconds < 1000 * 10)
             {
                 Console.WriteLine("Too Soon!");
@@ -85,6 +86,7 @@ namespace KnockServer
 
                 return status;
             }
+            */
 
 
             try
