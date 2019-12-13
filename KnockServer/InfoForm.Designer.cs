@@ -38,6 +38,8 @@ namespace KnockServer
             this.hostLabel = new System.Windows.Forms.Label();
             this.codeLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.gameActivityCheckbox = new System.Windows.Forms.CheckBox();
+            this.autostartCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize) (this.qrPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -75,17 +77,37 @@ namespace KnockServer
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(10, 290);
+            this.label2.Location = new System.Drawing.Point(10, 400);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(226, 20);
             this.label2.TabIndex = 4;
             this.label2.Text = "Right-Click the Tray Icon to Exit";
             // 
+            // gameActivityCheckbox
+            // 
+            this.gameActivityCheckbox.Location = new System.Drawing.Point(16, 300);
+            this.gameActivityCheckbox.Name = "gameActivityCheckbox";
+            this.gameActivityCheckbox.Size = new System.Drawing.Size(199, 20);
+            this.gameActivityCheckbox.TabIndex = 5;
+            this.gameActivityCheckbox.Text = "Show Current Game In App";
+            this.gameActivityCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // autostartCheckbox
+            // 
+            this.autostartCheckbox.Location = new System.Drawing.Point(16, 330);
+            this.autostartCheckbox.Name = "autostartCheckbox";
+            this.autostartCheckbox.Size = new System.Drawing.Size(199, 20);
+            this.autostartCheckbox.TabIndex = 6;
+            this.autostartCheckbox.Text = "Autostart with SteamVR";
+            this.autostartCheckbox.UseVisualStyleBackColor = true;
+            // 
             // InfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(933, 519);
+            this.ClientSize = new System.Drawing.Size(314, 511);
+            this.Controls.Add(this.autostartCheckbox);
+            this.Controls.Add(this.gameActivityCheckbox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.codeLabel);
             this.Controls.Add(this.hostLabel);
@@ -105,5 +127,7 @@ namespace KnockServer
         private System.Windows.Forms.Label codeLabel;
         private System.Windows.Forms.Label hostLabel;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox gameActivityCheckbox;
+        private System.Windows.Forms.CheckBox autostartCheckbox;
     }
 }

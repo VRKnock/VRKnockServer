@@ -109,82 +109,7 @@ namespace KnockServer
             }
         }
 
-    }
-
-    public class CustomApplicationContext : ApplicationContext
-    {
-        private NotifyIcon trayIcon;
-
-        WebServiceHost hostWeb;
-
-        public CustomApplicationContext()
-        {
-            trayIcon = new NotifyIcon()
-            {
-                Text = "VRKnockServer",
-                Icon = Properties.Resources.AppIcon,
-                ContextMenu = new ContextMenu(new MenuItem[] {
-                    new MenuItem("Info", Info),
-                    new MenuItem("Exit", Exit)
-                }),
-                Visible = true
-            };
-            trayIcon.Click += Info;
-
-
-            Console.WriteLine("Adding Firewall Rule...");
-            AddFirewallRule();
-
-
-            try
-            {
-                Console.WriteLine("Starting Web Service...");
-                /*
-                var restServiceInstance = new RestService();
-                WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
-                */
-                hostWeb = new WebServiceHost(typeof(RestService));
-                ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(IService), new WebHttpBinding(), "");
-                ServiceDebugBehavior stp = hostWeb.Description.Behaviors.Find<ServiceDebugBehavior>();
-                stp.HttpHelpPageEnabled = false;
-                hostWeb.Open();
-
-                //var localIp = GetLocalIPAddress()
-
-                Console.WriteLine("Web Service Running!");
-                Console.WriteLine(ep.Address);
-                // Console.WriteLine(localIp);
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to start Server!", ToolTipIcon.Error);
-                return;
-            }
-
-            try
-            {
-                Console.WriteLine("Initializing VR...");
-                NotificationManager.GetInstance().Init();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to init VR! Please make sure SteamVR is running!", ToolTipIcon.Error);
-                return;
-            }
-        
-            RegisterAutoLaunchApp();
-                 
-            
-            
-
-            trayIcon.ShowBalloonTip(2000, "VRKnock", "Server Running!", ToolTipIcon.Info);
-
-        }
-
-        static void RegisterAutoLaunchApp()
+        public static void RegisterAutoLaunchApp()
         {
             
             var error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock", Properties.Settings.Default.AutoStart);
@@ -203,7 +128,7 @@ namespace KnockServer
             Console.WriteLine(error);
         }
 
-        static bool AddFirewallRule()
+        public static bool AddFirewallRule()
         {
             // https://social.msdn.microsoft.com/Forums/vstudio/en-US/a3e390d1-4383-4f23-bad9-b725bef33499/add-firewall-rule-programatically?forum=wcf
             INetFwMgr icfMgr = null;
@@ -245,6 +170,81 @@ namespace KnockServer
                 return false;
             }
         }
+        
+    }
+
+    public class CustomApplicationContext : ApplicationContext
+    {
+        private NotifyIcon trayIcon;
+
+        WebServiceHost hostWeb;
+
+        public CustomApplicationContext()
+        {
+            trayIcon = new NotifyIcon()
+            {
+                Text = "VRKnockServer",
+                Icon = Properties.Resources.AppIcon,
+                ContextMenu = new ContextMenu(new MenuItem[] {
+                    new MenuItem("Info", Info),
+                    new MenuItem("Exit", Exit)
+                }),
+                Visible = true
+            };
+            trayIcon.Click += Info;
+
+
+            Console.WriteLine("Adding Firewall Rule...");
+            Program.AddFirewallRule();
+
+
+            try
+            {
+                Console.WriteLine("Starting Web Service...");
+                /*
+                var restServiceInstance = new RestService();
+                WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
+                */
+                hostWeb = new WebServiceHost(typeof(RestService));
+                ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(IService), new WebHttpBinding(), "");
+                ServiceDebugBehavior stp = hostWeb.Description.Behaviors.Find<ServiceDebugBehavior>();
+                stp.HttpHelpPageEnabled = false;
+                hostWeb.Open();
+
+                //var localIp = GetLocalIPAddress()
+
+                Console.WriteLine("Web Service Running!");
+                Console.WriteLine(ep.Address);
+                // Console.WriteLine(localIp);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to start Server!", ToolTipIcon.Error);
+                return;
+            }
+
+            try
+            {
+                Console.WriteLine("Initializing VR...");
+                NotificationManager.GetInstance().Init();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to init VR! Please make sure SteamVR is running!", ToolTipIcon.Error);
+                return;
+            }
+        
+            Program.RegisterAutoLaunchApp();
+                 
+
+            trayIcon.ShowBalloonTip(2000, "VRKnock", "Server Running!", ToolTipIcon.Info);
+
+        }
+
+        
 
 
 
