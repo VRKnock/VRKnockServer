@@ -97,7 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="SteamVR\open_api_patch.diff" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="NetFwTypeLib">
