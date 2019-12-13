@@ -93,6 +93,11 @@ namespace KnockServer
             var process = Process.GetProcessById((int)processId);
             Console.WriteLine(process.ProcessName);
             Console.WriteLine(process.MainWindowTitle);
+            if (process.MainWindowTitle.Length > 0)
+            {
+                return process.MainWindowTitle;
+            }
+           
             return process.ProcessName;
         }
 
