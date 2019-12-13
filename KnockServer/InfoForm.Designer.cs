@@ -91,6 +91,8 @@ namespace KnockServer
             this.gameActivityCheckbox.TabIndex = 5;
             this.gameActivityCheckbox.Text = "Show Current Game In App";
             this.gameActivityCheckbox.UseVisualStyleBackColor = true;
+            this.gameActivityCheckbox.CheckedChanged +=
+                new System.EventHandler(this.gameActivityCheckbox_CheckedChanged);
             // 
             // autostartCheckbox
             // 
@@ -100,6 +102,7 @@ namespace KnockServer
             this.autostartCheckbox.TabIndex = 6;
             this.autostartCheckbox.Text = "Autostart with SteamVR";
             this.autostartCheckbox.UseVisualStyleBackColor = true;
+            this.autostartCheckbox.CheckedChanged += new System.EventHandler(this.autostartCheckbox_CheckedChanged);
             // 
             // InfoForm
             // 

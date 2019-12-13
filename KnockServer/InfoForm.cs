@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 
 namespace KnockServer
@@ -16,17 +17,19 @@ namespace KnockServer
             autostartCheckbox.Checked = Properties.Settings.Default.AutoStart;
             gameActivityCheckbox.Checked = Properties.Settings.Default.ShowActivity;
         }
+    
         
-        private void gameActivityCheckbox_Click(object sender, System.EventArgs e)  
+      private void gameActivityCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.ShowActivity = gameActivityCheckbox.Checked;
-        } 
-        
-        private void autostartCheckbox_Click(object sender, System.EventArgs e)
+            Properties.Settings.Default.Save();
+        }
+
+        private void autostartCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.AutoStart = autostartCheckbox.Checked;
+            Properties.Settings.Default.Save();
             Program.RegisterAutoLaunchApp();
-        } 
-        
+        }
     }
 }
