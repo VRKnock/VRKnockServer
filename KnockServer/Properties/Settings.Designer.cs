@@ -46,5 +46,17 @@ namespace KnockServer.Properties {
                 this["AutoStart"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowActivity {
+            get {
+                return ((bool)(this["ShowActivity"]));
+            }
+            set {
+                this["ShowActivity"] = value;
+            }
+        }
     }
 }

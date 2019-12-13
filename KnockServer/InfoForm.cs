@@ -14,20 +14,12 @@ namespace KnockServer
             codeLabel.Text = "Code:  " + manager.connectionCode;
 
             autostartCheckbox.Checked = Properties.Settings.Default.AutoStart;
-            //gameActivityCheckbox.Checked = Properties.Settings.Default.
+            gameActivityCheckbox.Checked = Properties.Settings.Default.ShowActivity;
         }
         
         private void gameActivityCheckbox_Click(object sender, System.EventArgs e)  
-        {  
-            
-            if (gameActivityCheckbox.Checked)  
-            {  
-                //TODO
-            }  
-            else  
-            {  
-                //TODO  
-            }  
+        {
+            Properties.Settings.Default.ShowActivity = gameActivityCheckbox.Checked;
         } 
         
         private void autostartCheckbox_Click(object sender, System.EventArgs e)

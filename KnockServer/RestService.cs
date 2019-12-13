@@ -52,7 +52,10 @@ namespace KnockServer
                 return status;
             }
 
-            status.game = notificationManager.GetCurrentGame();
+            if (Properties.Settings.Default.ShowActivity)
+            {
+                status.game = notificationManager.GetCurrentGame();
+            }
 
 
             return status;
@@ -109,7 +112,11 @@ namespace KnockServer
 
             Console.WriteLine("Notification sent!");
 
-            status.game = notificationManager.GetCurrentGame();
+            if (Properties.Settings.Default.ShowActivity)
+            {
+                status.game = notificationManager.GetCurrentGame();
+            }
+
 
             _stopwatch.Restart();
 
