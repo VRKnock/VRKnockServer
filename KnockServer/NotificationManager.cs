@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using QRCoder;
 using Valve.VR;
 
@@ -88,11 +89,55 @@ namespace KnockServer
         
         public string GetCurrentGame()
         {
-            var processId = OpenVR.Applications.GetCurrentSceneProcessId();
+            uint processId = OpenVR.Applications.GetCurrentSceneProcessId();
             Console.WriteLine("Current Process ID: " + processId);
+
+            if (processId != 0)
+            {
+                try
+                {
+                    StringBuilder stringBuilder = new StringBuilder()
+                    {
+                        Length = (int) byte.MaxValue
+                    };
+                    EVRApplicationError error =
+                        OpenVR.Applications.GetApplicationKeyByProcessId(processId, stringBuilder, (uint) byte.MaxValue);
+                    if (error == EVRApplicationError.None)
+                    {
+                        string appKey = stringBuilder.ToString();
+                        Console.WriteLine("App Key: " + appKey);
+                        if (appKey.Length > 0)
+                        {
+                            OpenVR.Applications.GetApplicationPropertyString(appKey, EVRApplicationProperty.Name_String,
+                                stringBuilder, (uint) byte.MaxValue, ref error);
+                            if (error != EVRApplicationError.None)
+                            {
+                                Console.WriteLine("GetApplicationPropertyString Error:");
+                                Console.WriteLine(error);
+                                return appKey;
+                            }
+                            string appName = stringBuilder.ToString();
+
+                            Console.WriteLine("App Name: " + appName);
+                            return appName;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine(error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to get app name via OpenVR");
+                    Console.WriteLine(ex);
+                }
+            }
+
             var process = Process.GetProcessById((int)processId);
             Console.WriteLine(process.ProcessName);
             Console.WriteLine(process.MainWindowTitle);
+            
             if (process.MainWindowTitle.Length > 0)
             {
                 return process.MainWindowTitle;
