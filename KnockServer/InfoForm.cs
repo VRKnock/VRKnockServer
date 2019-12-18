@@ -11,8 +11,9 @@ namespace KnockServer
 
             var manager = NotificationManager.GetInstance();
             qrPictureBox.Image = manager.GetQRCode().GetGraphic(4);
-            hostLabel.Text = "Host:  "+ NotificationManager.GetLocalIPAddress();
-            codeLabel.Text = "Code:  " + manager.connectionCode;
+            
+            hostTextBox.Text = NotificationManager.GetLocalIPAddress();
+            codeTextBox.Text = manager.connectionCode;
 
             autostartCheckbox.Checked = Properties.Settings.Default.AutoStart;
             gameActivityCheckbox.Checked = Properties.Settings.Default.ShowActivity;

@@ -40,6 +40,8 @@ namespace KnockServer
             this.label2 = new System.Windows.Forms.Label();
             this.gameActivityCheckbox = new System.Windows.Forms.CheckBox();
             this.autostartCheckbox = new System.Windows.Forms.CheckBox();
+            this.hostTextBox = new System.Windows.Forms.TextBox();
+            this.codeTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize) (this.qrPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,15 +65,15 @@ namespace KnockServer
             // 
             this.hostLabel.Location = new System.Drawing.Point(10, 240);
             this.hostLabel.Name = "hostLabel";
-            this.hostLabel.Size = new System.Drawing.Size(226, 20);
+            this.hostLabel.Size = new System.Drawing.Size(50, 20);
             this.hostLabel.TabIndex = 2;
             this.hostLabel.Text = "Host:";
             // 
             // codeLabel
             // 
-            this.codeLabel.Location = new System.Drawing.Point(10, 260);
+            this.codeLabel.Location = new System.Drawing.Point(10, 265);
             this.codeLabel.Name = "codeLabel";
-            this.codeLabel.Size = new System.Drawing.Size(226, 20);
+            this.codeLabel.Size = new System.Drawing.Size(50, 20);
             this.codeLabel.TabIndex = 3;
             this.codeLabel.Text = "Code:";
             // 
@@ -104,11 +106,29 @@ namespace KnockServer
             this.autostartCheckbox.UseVisualStyleBackColor = true;
             this.autostartCheckbox.CheckedChanged += new System.EventHandler(this.autostartCheckbox_CheckedChanged);
             // 
+            // hostTextBox
+            // 
+            this.hostTextBox.Location = new System.Drawing.Point(66, 237);
+            this.hostTextBox.Name = "hostTextBox";
+            this.hostTextBox.ReadOnly = true;
+            this.hostTextBox.Size = new System.Drawing.Size(200, 23);
+            this.hostTextBox.TabIndex = 7;
+            // 
+            // codeTextBox
+            // 
+            this.codeTextBox.Location = new System.Drawing.Point(66, 262);
+            this.codeTextBox.Name = "codeTextBox";
+            this.codeTextBox.ReadOnly = true;
+            this.codeTextBox.Size = new System.Drawing.Size(200, 23);
+            this.codeTextBox.TabIndex = 8;
+            // 
             // InfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(314, 511);
+            this.Controls.Add(this.codeTextBox);
+            this.Controls.Add(this.hostTextBox);
             this.Controls.Add(this.autostartCheckbox);
             this.Controls.Add(this.gameActivityCheckbox);
             this.Controls.Add(this.label2);
@@ -123,6 +143,7 @@ namespace KnockServer
             this.Text = "VRKnock Server";
             ((System.ComponentModel.ISupportInitialize) (this.qrPictureBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
         }
 
         #endregion
@@ -134,5 +155,7 @@ namespace KnockServer
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox gameActivityCheckbox;
         private System.Windows.Forms.CheckBox autostartCheckbox;
+        private System.Windows.Forms.TextBox codeTextBox;
+        private System.Windows.Forms.TextBox hostTextBox;
     }
 }
