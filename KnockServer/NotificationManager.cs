@@ -155,7 +155,7 @@ namespace KnockServer
         {
             if (qrCode == null)
             {
-                qrCode = new QRCode(new QRCodeGenerator().CreateQrCode("http://"+GetLocalIPAddress()+"/"+connectionCode,QRCodeGenerator.ECCLevel.Q));
+                qrCode = new QRCode(new QRCodeGenerator().CreateQrCode("https://vrknock.app/"+GetLocalIPAddress()+"/"+connectionCode,QRCodeGenerator.ECCLevel.Q));
             }
 
             return qrCode;
