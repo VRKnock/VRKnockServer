@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using Valve.VR;
 
 namespace KnockServer
@@ -21,6 +22,7 @@ namespace KnockServer
             bool running = true;
 
             Status status = new Status();
+            status.version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             var notificationManager = NotificationManager.GetInstance();
             if (!notificationManager.CheckCode(code))
@@ -68,6 +70,7 @@ namespace KnockServer
             Console.WriteLine(message);
 
             Status status = new Status();
+            status.version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             var notificationManager = NotificationManager.GetInstance();
             if (!notificationManager.CheckCode(code))

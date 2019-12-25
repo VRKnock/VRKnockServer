@@ -30,5 +30,6 @@ namespace KnockServer
         public string host { get; set; }
         public string device { get; set; }
         public string game { get; set; }
+        public string version { get; set; }
     }
 }
