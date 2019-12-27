@@ -8,11 +8,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
 using System.Windows.Forms;
 using NetFwTypeLib;
 using Valve.VR;
+using WebSocketSharp.Server;
 
 namespace KnockServer
 {
@@ -178,6 +180,7 @@ namespace KnockServer
         private NotifyIcon trayIcon;
 
         WebServiceHost hostWeb;
+        WebSocketServer server;
 
         public CustomApplicationContext()
         {
@@ -201,20 +204,15 @@ namespace KnockServer
             try
             {
                 Console.WriteLine("Starting Web Service...");
-                /*
-                var restServiceInstance = new RestService();
-                WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
-                */
-                hostWeb = new WebServiceHost(typeof(RestService));
-                ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(IService), new WebHttpBinding(), "");
-                ServiceDebugBehavior stp = hostWeb.Description.Behaviors.Find<ServiceDebugBehavior>();
-                stp.HttpHelpPageEnabled = false;
-                hostWeb.Open();
 
-                //var localIp = GetLocalIPAddress()
-
+                var port = 16945;
+                server = new WebSocketServer(port);
+                server.AddWebSocketService<SocketServer>("/");
+                server.Start();
+                
                 Console.WriteLine("Web Service Running!");
-                Console.WriteLine(ep.Address);
+                Console.WriteLine(server.Address+":"+port);
+                
                 // Console.WriteLine(localIp);
 
             }
@@ -263,7 +261,7 @@ namespace KnockServer
         {
             trayIcon.Visible = false;
 
-            hostWeb.Close();
+            server.Stop();
         }
 
         void Exit(object sender, EventArgs e)
