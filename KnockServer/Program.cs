@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
 using System.Windows.Forms;
@@ -205,16 +206,35 @@ namespace KnockServer
                 var restServiceInstance = new RestService();
                 WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
                 */
-                hostWeb = new WebServiceHost(typeof(RestService));
-                ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(IService), new WebHttpBinding(), "");
-                ServiceDebugBehavior stp = hostWeb.Description.Behaviors.Find<ServiceDebugBehavior>();
-                stp.HttpHelpPageEnabled = false;
-                hostWeb.Open();
+              
+                hostWeb = new WebServiceHost(typeof(RestService), new Uri("http://localhost:16945"));
+              
+                hostWeb.Description.Behaviors.Remove(
+                    typeof(ServiceDebugBehavior));
+                hostWeb.Description.Behaviors.Add(
+                    new ServiceDebugBehavior { IncludeExceptionDetailInFaults = true });
+                
+                ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(RestService), new WebHttpBinding()
+                {
+                    CrossDomainScriptAccessEnabled = true,
+                }, "");
+                ep.Behaviors.Add(new WebHttpBehavior()
+                {
+                    FaultExceptionEnabled = true
+                });
+              ep.Behaviors.Add(new EnableCorsBehavior());
+              
+
+
+
+              hostWeb.Open();
+
 
                 //var localIp = GetLocalIPAddress()
 
                 Console.WriteLine("Web Service Running!");
                 Console.WriteLine(ep.Address);
+                
                 // Console.WriteLine(localIp);
 
             }

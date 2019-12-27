@@ -1,11 +1,14 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.ServiceModel;
+using System.ServiceModel.Web;
 using Valve.VR;
 
 namespace KnockServer
 {
-    public class RestService : IService
+    [ServiceContract]
+    public class RestService 
     {
         private Stopwatch _stopwatch = new Stopwatch();
 
@@ -14,6 +17,10 @@ namespace KnockServer
             _stopwatch.Start();
         }
 
+        [OperationContract]
+        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "status")]
+        [return:MessageParameter(Name="Status")]
         public Status GetStatus(string code = "")
         {
             Console.WriteLine("GetStatus");
@@ -63,6 +70,10 @@ namespace KnockServer
             return status;
         }
 
+        [OperationContract]
+        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "triggerKnock")]
+        [return:MessageParameter(Name="Status")]
         public Status TriggerKnock(string code, string message = "Knock Knock!")
         {
             Console.WriteLine("TriggerKnock");
@@ -127,4 +138,15 @@ namespace KnockServer
             return status;
         }
     }
+    
+    public class Status
+    {
+        public int status { get; set; }
+        public string msg { get; set; }
+        public string host { get; set; }
+        public string device { get; set; }
+        public string game { get; set; }
+        public string version { get; set; }
+    }
+    
 }
