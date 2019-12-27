@@ -14,6 +14,7 @@ using System.ServiceModel.Web;
 using System.Windows.Forms;
 using NetFwTypeLib;
 using Valve.VR;
+using WebSocketSharp.Server;
 
 namespace KnockServer
 {
@@ -179,6 +180,7 @@ namespace KnockServer
         private NotifyIcon trayIcon;
 
         WebServiceHost hostWeb;
+        WebSocketServer server;
 
         public CustomApplicationContext()
         {
@@ -202,38 +204,14 @@ namespace KnockServer
             try
             {
                 Console.WriteLine("Starting Web Service...");
-                /*
-                var restServiceInstance = new RestService();
-                WebServiceHost hostWeb = new WebServiceHost(restServiceInstance);
-                */
-              
-                hostWeb = new WebServiceHost(typeof(RestService), new Uri("http://localhost:16945"));
-              
-                hostWeb.Description.Behaviors.Remove(
-                    typeof(ServiceDebugBehavior));
-                hostWeb.Description.Behaviors.Add(
-                    new ServiceDebugBehavior { IncludeExceptionDetailInFaults = true });
+
+                var port = 16945;
+                server = new WebSocketServer(port);
+                server.AddWebSocketService<SocketServer>("/");
+                server.Start();
                 
-                ServiceEndpoint ep = hostWeb.AddServiceEndpoint(typeof(RestService), new WebHttpBinding()
-                {
-                    CrossDomainScriptAccessEnabled = true,
-                }, "");
-                ep.Behaviors.Add(new WebHttpBehavior()
-                {
-                    FaultExceptionEnabled = true
-                });
-              ep.Behaviors.Add(new EnableCorsBehavior());
-              
-
-
-
-              hostWeb.Open();
-
-
-                //var localIp = GetLocalIPAddress()
-
                 Console.WriteLine("Web Service Running!");
-                Console.WriteLine(ep.Address);
+                Console.WriteLine(server.Address+":"+port);
                 
                 // Console.WriteLine(localIp);
 
@@ -283,7 +261,7 @@ namespace KnockServer
         {
             trayIcon.Visible = false;
 
-            hostWeb.Close();
+            server.Stop();
         }
 
         void Exit(object sender, EventArgs e)

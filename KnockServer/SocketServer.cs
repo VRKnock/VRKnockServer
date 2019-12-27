@@ -1,38 +1,57 @@
 using System;
-using System.Diagnostics;
 using System.Reflection;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using Valve.VR;
+using System.Web.Script.Serialization;
+using WebSocketSharp;
+using WebSocketSharp.Server;
 
 namespace KnockServer
 {
-    [ServiceContract]
-    public class RestService 
+    public class SocketServer : WebSocketBehavior
     {
-        private Stopwatch _stopwatch = new Stopwatch();
-
-        public RestService()
+        protected override void OnClose(CloseEventArgs e)
         {
-            _stopwatch.Start();
+            base.OnClose(e);
+            Console.WriteLine("A Client Disconnected.");
         }
 
-        [OperationContract]
-        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "status")]
-        [return:MessageParameter(Name="Status")]
-        public Status GetStatus(string code = "")
+        protected override void OnOpen()
         {
-            Console.WriteLine("GetStatus");
+            base.OnOpen();
+            Console.WriteLine("New Client Connected!");
+        }
+        
 
-            // var controller = HUDCenterController.GetInstance();
-            bool running = true;
+        protected override void OnMessage(MessageEventArgs e)
+        {
+            Console.WriteLine(e.Data);
+            Request request = ParseRequest(e.Data);
 
+            Status status = null;
+            switch (request.action)
+            {
+                case "knock":
+                   status =  HandleKnock(request);
+                    break;
+                case "status":
+                default:
+                   status =  HandleStatus(request);
+                    break;
+                
+            }
+            
+            SendStatus(status);
+        }
+
+        Status HandleStatus(Request request)
+        {
+            Console.WriteLine("HandleStatus");
+            
+            
             Status status = new Status();
             status.version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             var notificationManager = NotificationManager.GetInstance();
-            if (!notificationManager.CheckCode(code))
+            if (!notificationManager.CheckCode(request.code))
             {
                 Console.WriteLine("Wrong Code!");
                 status.status = 1;
@@ -43,10 +62,11 @@ namespace KnockServer
             
             status.host = Environment.MachineName;
 
+            bool running = true;
             if (running)
             {
                 status.status = 0;
-                status.msg = "Server & VR Controller Running!";
+                status.msg = "Server and VR Controller Running!";
             }
             else
             {
@@ -70,21 +90,18 @@ namespace KnockServer
             return status;
         }
 
-        [OperationContract]
-        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "triggerKnock")]
-        [return:MessageParameter(Name="Status")]
-        public Status TriggerKnock(string code, string message = "Knock Knock!")
+        Status HandleKnock(Request request)
         {
-            Console.WriteLine("TriggerKnock");
-            Console.WriteLine(code);
-            Console.WriteLine(message);
+            Console.WriteLine("HandleKnock");
+            
+            Console.WriteLine(request.code);
+            Console.WriteLine(request.message);
 
             Status status = new Status();
             status.version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             var notificationManager = NotificationManager.GetInstance();
-            if (!notificationManager.CheckCode(code))
+            if (!notificationManager.CheckCode(request.code))
             {
                 Console.WriteLine("Wrong Code!");
                 status.status = 1;
@@ -96,21 +113,11 @@ namespace KnockServer
             Console.WriteLine("Correct Code!");
 
             status.host = Environment.MachineName;
-            /*
-            if (_stopwatch.ElapsedMilliseconds < 1000 * 10)
-            {
-                Console.WriteLine("Too Soon!");
-                status.status = 1;
-                status.msg = "Too soon";
-
-                return status;
-            }
-            */
 
 
             try
             {
-                notificationManager.ShowNotification(message);
+                notificationManager.ShowNotification(request.message);
             }
             catch (Exception e)
             {
@@ -132,11 +139,30 @@ namespace KnockServer
             }
 
 
-            _stopwatch.Restart();
 
 
             return status;
         }
+
+        Request ParseRequest(string data)
+        {
+            return new JavaScriptSerializer().Deserialize<Request>(data);
+        }
+
+        void SendStatus(Status status)
+        {
+            string json = new JavaScriptSerializer().Serialize(status);
+            Send(json);
+        }
+        
+    }
+
+    public class Request
+    {
+        public string action { get; set; }
+        public string code { get; set; }
+        public string message { get; set; }
+        public string version { get; set; }
     }
     
     public class Status
