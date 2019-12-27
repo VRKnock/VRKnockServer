@@ -29,7 +29,7 @@ namespace KnockServer
             Status status = null;
             switch (request.action)
             {
-                case "knock":
+                case "triggerKnock":
                    status =  HandleKnock(request);
                     break;
                 case "status":
@@ -167,6 +167,7 @@ namespace KnockServer
     
     public class Status
     {
+        public string evt = "status";
         public int status { get; set; }
         public string msg { get; set; }
         public string host { get; set; }
