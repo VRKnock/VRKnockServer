@@ -197,6 +197,14 @@ namespace KnockServer
             trayIcon.Click += Info;
 
 
+            if (string.IsNullOrEmpty(Properties.Settings.Default.ServerId))
+            {
+                Properties.Settings.Default.ServerId = Guid.NewGuid().ToString();
+                Properties.Settings.Default.Save();
+            }
+
+            Console.WriteLine("ServerId: " + Properties.Settings.Default.ServerId);
+            
             Console.WriteLine("Adding Firewall Rule...");
             Program.AddFirewallRule();
 
