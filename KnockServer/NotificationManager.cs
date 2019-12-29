@@ -155,7 +155,17 @@ namespace KnockServer
         {
             if (qrCode == null)
             {
-                qrCode = new QRCode(new QRCodeGenerator().CreateQrCode("https://vrknock.app/"+GetLocalIPAddress()+"/"+connectionCode,QRCodeGenerator.ECCLevel.Q));
+                if (Properties.Settings.Default.ConnectionMethod == "DIRECT")
+                {
+                    qrCode = new QRCode(new QRCodeGenerator().CreateQrCode(
+                        "https://vrknock.app/" + GetLocalIPAddress() + "/" + connectionCode+"?cm=direct",
+                        QRCodeGenerator.ECCLevel.Q));
+                }else if (Properties.Settings.Default.ConnectionMethod == "BRIDGE")
+                {
+                    qrCode = new QRCode(new QRCodeGenerator().CreateQrCode(
+                        "https://vrknock.app/" + Properties.Settings.Default.ServerId + "/" + connectionCode+"?cm=bridge",
+                        QRCodeGenerator.ECCLevel.Q));
+                }
             }
 
             return qrCode;

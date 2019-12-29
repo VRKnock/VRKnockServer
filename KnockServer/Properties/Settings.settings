@@ -14,5 +14,8 @@
     <Setting Name="ServerId" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="ConnectionMethod" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DIRECT</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

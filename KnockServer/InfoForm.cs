@@ -10,13 +10,15 @@ namespace KnockServer
             InitializeComponent();
 
             var manager = NotificationManager.GetInstance();
-            qrPictureBox.Image = manager.GetQRCode().GetGraphic(4);
+            var qrcode = manager.GetQRCode();
+            qrPictureBox.Image = qrcode.GetGraphic(3);
             
             hostTextBox.Text = NotificationManager.GetLocalIPAddress();
             codeTextBox.Text = manager.connectionCode;
 
             autostartCheckbox.Checked = Properties.Settings.Default.AutoStart;
             gameActivityCheckbox.Checked = Properties.Settings.Default.ShowActivity;
+            connectionMethodComboBox.SelectedIndex = connectionMethodComboBox.FindStringExact(Properties.Settings.Default.ConnectionMethod);
         }
     
         
@@ -31,6 +33,12 @@ namespace KnockServer
             Properties.Settings.Default.AutoStart = autostartCheckbox.Checked;
             Properties.Settings.Default.Save();
             Program.RegisterAutoLaunchApp();
+        }
+
+        private void connectionMethodComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ConnectionMethod =  connectionMethodComboBox.GetItemText(connectionMethodComboBox.SelectedItem);
+            Properties.Settings.Default.Save();
         }
     }
 }
