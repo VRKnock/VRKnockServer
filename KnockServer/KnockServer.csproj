@@ -97,6 +97,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SocketMessageHandler.cs" />
     <Compile Include="SocketServer.cs" />
     <Compile Include="SteamVR\openvr_api.cs" />
   </ItemGroup>

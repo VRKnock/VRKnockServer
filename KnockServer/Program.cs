@@ -14,6 +14,7 @@ using System.ServiceModel.Web;
 using System.Windows.Forms;
 using NetFwTypeLib;
 using Valve.VR;
+using WebSocketSharp;
 using WebSocketSharp.Server;
 
 namespace KnockServer
@@ -56,11 +57,10 @@ namespace KnockServer
             }
             else
             {*/
-                Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Version.ToString());
-                
-                Application.Run(new CustomApplicationContext());
-            //}
+            Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
+            Application.Run(new CustomApplicationContext());
+            //}
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -96,7 +96,6 @@ namespace KnockServer
         }
 
 
-
         private static bool IsRunAsAdmin()
         {
             try
@@ -113,8 +112,8 @@ namespace KnockServer
 
         public static void RegisterAutoLaunchApp()
         {
-            
-            var error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock", Properties.Settings.Default.AutoStart);
+            var error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock",
+                Properties.Settings.Default.AutoStart);
             Console.WriteLine("ApplicationAutoLaunch Error:");
             Console.WriteLine(error);
             if (error == EVRApplicationError.UnknownApplication)
@@ -125,7 +124,8 @@ namespace KnockServer
                 Console.WriteLine(error);
             }
 
-            error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock", Properties.Settings.Default.AutoStart);
+            error = OpenVR.Applications.SetApplicationAutoLaunch("org.inventivetalent.vrknock",
+                Properties.Settings.Default.AutoStart);
             Console.WriteLine("ApplicationAutoLaunch Error:");
             Console.WriteLine(error);
         }
@@ -137,7 +137,7 @@ namespace KnockServer
             try
             {
                 Type TicfMgr = Type.GetTypeFromProgID("HNetCfg.FwMgr");
-                icfMgr = (INetFwMgr)Activator.CreateInstance(TicfMgr);
+                icfMgr = (INetFwMgr) Activator.CreateInstance(TicfMgr);
             }
             catch (Exception ex)
             {
@@ -150,7 +150,7 @@ namespace KnockServer
                 INetFwProfile profile;
                 INetFwOpenPort portClass;
                 Type TportClass = Type.GetTypeFromProgID("HNetCfg.FWOpenPort");
-                portClass = (INetFwOpenPort)Activator.CreateInstance(TportClass);
+                portClass = (INetFwOpenPort) Activator.CreateInstance(TportClass);
 
                 // Get the current profile
                 profile = icfMgr.LocalPolicy.CurrentProfile;
@@ -172,7 +172,6 @@ namespace KnockServer
                 return false;
             }
         }
-        
     }
 
     public class CustomApplicationContext : ApplicationContext
@@ -180,7 +179,8 @@ namespace KnockServer
         private NotifyIcon trayIcon;
 
         WebServiceHost hostWeb;
-        WebSocketServer server;
+        WebSocketServer socketServer;
+         WebSocket socketClient;
 
         public CustomApplicationContext()
         {
@@ -188,7 +188,8 @@ namespace KnockServer
             {
                 Text = "VRKnockServer",
                 Icon = Properties.Resources.AppIcon,
-                ContextMenu = new ContextMenu(new MenuItem[] {
+                ContextMenu = new ContextMenu(new MenuItem[]
+                {
                     new MenuItem("Info", Info),
                     new MenuItem("Exit", Exit)
                 }),
@@ -197,30 +198,87 @@ namespace KnockServer
             trayIcon.Click += Info;
 
 
+            if (string.IsNullOrEmpty(Properties.Settings.Default.ServerId))
+            {
+                Properties.Settings.Default.ServerId = Guid.NewGuid().ToString();
+                Properties.Settings.Default.Save();
+            }
+
+            Console.WriteLine("ServerId: " + Properties.Settings.Default.ServerId);
+
             Console.WriteLine("Adding Firewall Rule...");
             Program.AddFirewallRule();
 
 
-            try
+            Console.WriteLine("ConnectionMethod: " + Properties.Settings.Default.ConnectionMethod);
+            if (Properties.Settings.Default.ConnectionMethod == "DIRECT")
             {
-                Console.WriteLine("Starting Web Service...");
+                try
+                {
+                    Console.WriteLine("Starting WebSocket Server...");
 
-                var port = 16945;
-                server = new WebSocketServer(port);
-                server.AddWebSocketService<SocketServer>("/");
-                server.Start();
-                
-                Console.WriteLine("Web Service Running!");
-                Console.WriteLine(server.Address+":"+port);
-                
-                // Console.WriteLine(localIp);
+                    var port = 16945;
+                    socketServer = new WebSocketServer(port);
+                    socketServer.AddWebSocketService<SocketServer>("/");
+                    socketServer.Start();
 
+                    Console.WriteLine("Web Service Running!");
+                    Console.WriteLine(socketServer.Address + ":" + port);
+
+                    // Console.WriteLine(localIp);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to start Server!", ToolTipIcon.Error);
+                    return;
+                }
             }
-            catch (Exception ex)
+            else if (Properties.Settings.Default.ConnectionMethod == "BRIDGE")
             {
-                Console.WriteLine(ex.ToString());
-                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to start Server!", ToolTipIcon.Error);
-                return;
+                try
+                {
+                    Console.WriteLine("Starting WebSocket Client...");
+
+
+                    socketClient = new WebSocket("wss://bridge.vrknock.app")
+                    {
+                        Origin ="ws://"+Properties.Settings.Default.ServerId+".servers.vrknock.app:16945"
+                    };
+                    
+                    var _messageHandler = new SocketMessageHandler()
+                    {
+                        Send = (s,t) =>
+                        {
+                            socketClient.Send("{\"_type\":\"forward\",\"source\":\""+Properties.Settings.Default.ServerId+"\",\"target\":\""+t+"\",\"payload\":"+s+'}');
+                            return null;
+                        }
+                    };
+                        
+                    socketClient.OnOpen += (sender, args) =>
+                    {
+                        Console.WriteLine("Connected to bridge!");
+                        
+                        socketClient.Send("{\"_type\":\"register\",\"payload\":{\"type\":\"server\",\"serverId\":\""+Properties.Settings.Default.ServerId+"\"}}");
+                    };
+                    socketClient.OnMessage += (sender, args) =>
+                    {
+                        Console.WriteLine(args.Data);
+                        _messageHandler.OnMessage(args);
+                    };
+                    
+                    socketClient.ConnectAsync();
+
+
+
+                    // Console.WriteLine(localIp);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to connect to bridge!", ToolTipIcon.Error);
+                    return;
+                }
             }
 
             try
@@ -231,19 +289,16 @@ namespace KnockServer
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to init VR! Please make sure SteamVR is running!", ToolTipIcon.Error);
+                trayIcon.ShowBalloonTip(2000, "VRKnock", "Failed to init VR! Please make sure SteamVR is running!",
+                    ToolTipIcon.Error);
                 return;
             }
-        
+
             Program.RegisterAutoLaunchApp();
-                 
+
 
             trayIcon.ShowBalloonTip(2000, "VRKnock", "Server Running!", ToolTipIcon.Info);
-
         }
-
-        
-
 
 
         void Info(object sender, EventArgs e)
@@ -261,15 +316,13 @@ namespace KnockServer
         {
             trayIcon.Visible = false;
 
-            server.Stop();
+            socketServer?.Stop();
+            socketClient?.Close();
         }
 
         void Exit(object sender, EventArgs e)
         {
-
-
             Application.Exit();
         }
     }
-
 }

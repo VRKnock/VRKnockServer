@@ -58,5 +58,29 @@ namespace KnockServer.Properties {
                 this["ShowActivity"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ServerId {
+            get {
+                return ((string)(this["ServerId"]));
+            }
+            set {
+                this["ServerId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DIRECT")]
+        public string ConnectionMethod {
+            get {
+                return ((string)(this["ConnectionMethod"]));
+            }
+            set {
+                this["ConnectionMethod"] = value;
+            }
+        }
     }
 }
