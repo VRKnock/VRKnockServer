@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace KnockServer
@@ -19,6 +20,9 @@ namespace KnockServer
             autostartCheckbox.Checked = Properties.Settings.Default.AutoStart;
             gameActivityCheckbox.Checked = Properties.Settings.Default.ShowActivity;
             connectionMethodComboBox.SelectedIndex = connectionMethodComboBox.FindStringExact(Properties.Settings.Default.ConnectionMethod);
+
+            versionLabel.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            clientCountLabel.Text = CustomApplicationContext.GetClientCount().ToString()+" Client(s)";
         }
     
         

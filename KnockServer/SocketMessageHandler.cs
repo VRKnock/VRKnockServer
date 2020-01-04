@@ -7,10 +7,28 @@ namespace KnockServer
 {
     public class SocketMessageHandler
     {
+        public int clientCount = 0;
+        
         public void OnMessage(MessageEventArgs e)
         {
             Console.WriteLine(e.Data);
             Request request = ParseRequest(e.Data);
+
+            if (request._state != null)
+            {
+                if (request._state == "CONNECT")
+                {
+                    clientCount++;
+                }
+
+                if (request._state == "DISCONNECT")
+                {
+                    clientCount--;
+                }
+
+                Console.WriteLine("ClientCount: "+clientCount);
+                return;
+            }
 
             Status status = null;
             switch (request.action)
@@ -149,6 +167,7 @@ namespace KnockServer
 
     public class Request
     {
+        public string _state { get; set; }
         public string action { get; set; }
         public string code { get; set; }
         public string message { get; set; }

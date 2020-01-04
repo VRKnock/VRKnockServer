@@ -11,6 +11,8 @@ namespace KnockServer
     {
         private SocketMessageHandler _messageHandler;
 
+        public int clientCount = 0;
+        
         public SocketServer()
         {
             _messageHandler = new SocketMessageHandler()
@@ -28,12 +30,16 @@ namespace KnockServer
         {
             base.OnClose(e);
             Console.WriteLine("A Client Disconnected.");
+            clientCount--;
+            Console.WriteLine("ClientCount: "+clientCount);
         }
 
         protected override void OnOpen()
         {
             base.OnOpen();
             Console.WriteLine("New Client Connected!");
+            clientCount++;
+            Console.WriteLine("ClientCount: "+clientCount);
         }
 
 

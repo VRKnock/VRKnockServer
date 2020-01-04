@@ -180,7 +180,9 @@ namespace KnockServer
 
         WebServiceHost hostWeb;
         WebSocketServer socketServer;
-         WebSocket socketClient;
+        static SocketServer innerSocketServer;
+         static WebSocket socketClient;
+         static SocketMessageHandler _messageHandler;
 
         public CustomApplicationContext()
         {
@@ -219,9 +221,12 @@ namespace KnockServer
 
                     var port = 16945;
                     socketServer = new WebSocketServer(port);
-                    socketServer.AddWebSocketService<SocketServer>("/");
+                    socketServer.AddWebSocketService<SocketServer>("/", () =>
+                    {
+                        return innerSocketServer=  new SocketServer();
+                    });
                     socketServer.Start();
-
+                    
                     Console.WriteLine("Web Service Running!");
                     Console.WriteLine(socketServer.Address + ":" + port);
 
@@ -246,7 +251,7 @@ namespace KnockServer
                         Origin ="ws://"+Properties.Settings.Default.ServerId+".servers.vrknock.app:16945"
                     };
                     
-                    var _messageHandler = new SocketMessageHandler()
+                    _messageHandler = new SocketMessageHandler()
                     {
                         Send = (s,t) =>
                         {
@@ -300,6 +305,18 @@ namespace KnockServer
             trayIcon.ShowBalloonTip(2000, "VRKnock", "Server Running!", ToolTipIcon.Info);
         }
 
+        public static int GetClientCount()
+        {
+            if (Properties.Settings.Default.ConnectionMethod == "DIRECT" && innerSocketServer != null)
+            {
+                return innerSocketServer.clientCount;
+            }else if (Properties.Settings.Default.ConnectionMethod == "BRIDGE" && _messageHandler != null)
+            {
+                return _messageHandler.clientCount;
+            }
+
+            return 0;
+        }
 
         void Info(object sender, EventArgs e)
         {
