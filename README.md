@@ -4,7 +4,7 @@ Server for [VRKnockApp](https://github.com/InventivetalentDev/VRKnockApp) which 
 
 
 ## API
-The server works by running a local web server on port `16945` which exposes the following endpoints:
+The server works by running a local web socket server on port `16945` which exposes the following endpoints:
 
 All endpoints return a status:
 ```json
@@ -20,21 +20,3 @@ All endpoints return a status:
 }
 ```
 
-
-### `POST /status`
-Can be used to check if the server is running and if VR is active.  
-Body: 
-```json
-{"code":"<code given by the server info window>"}
-```
-
-
-### `POST /triggerKnock`
-Used to trigger a knock.  
-Body:
-```json
-{
-  "code":"<code given by the server info window>",
-  "message":"<message to show>"
-}
-```
